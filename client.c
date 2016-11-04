@@ -64,9 +64,11 @@ int main(int argc, char **argv)
     if (strcmp(argv[4], "put") == 0)
     {
             int taille_hash = strlen(argv[5]);
-      			int taille_base = 1+9+18;
-      			int taille_final = taille_hash + taille_base;
+      			int taille_base = (1+9+18)*8;
+      			int taille_final = taille_hash + taille_base +128;
                         int taille_final_moins_un = taille_final--;
+			printf("taille hash : %d \n", taille_hash);
+			printf("taille finale : %d \n", taille_final);
 
       			char *buf;
                         buf = (char*)malloc(taille_final*sizeof(char));

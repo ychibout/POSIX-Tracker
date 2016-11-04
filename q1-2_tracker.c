@@ -42,7 +42,7 @@ int main(int argc, char **argv)
         /*PARTIE 2 : socket de reception de données*/
 
         int sockfd; // descripteur
-        char buf[1024]; // buffer
+        char buf[2048]; // buffer
         socklen_t addrlen; // socket
 
         struct sockaddr_in6 my_addr; // adresse ipv4
@@ -60,7 +60,7 @@ int main(int argc, char **argv)
         my_addr.sin6_port        = htons(atoi(argv[2])); // le port
         my_addr.sin6_addr        = in6addr_any; // on ecoute sur n'importe quel adresse ( anycast )
         addrlen                  = sizeof(struct sockaddr_in6); // longueur de l'adresse
-        memset(buf,'\0',1024);
+        memset(buf,'\0',2048);
 
         // association de la socket avec l'adresse
         if( bind(sockfd, (struct sockaddr *) &my_addr, addrlen) == -1) // adresse
@@ -73,8 +73,10 @@ int main(int argc, char **argv)
         // reception de la chaine de caracteres
         while (1)
         {
-                memset(buf,'\0',1024);
-                if(recvfrom(sockfd, buf , 1024, 0, (struct sockaddr *) &client, &addrlen ) == -1)
+
+		
+                memset(buf,'\0',2048);
+                if(recvfrom(sockfd, buf , 2048, 0, (struct sockaddr *) &client, &addrlen ) == -1)
                 {
                   perror("recvfrom fail \n");
                   close(sockfd);
@@ -82,6 +84,29 @@ int main(int argc, char **argv)
                 }
 
                 printf("%s\n", buf);
+
+		char msg_type[3];
+		char msg_length[4];
+
+		char hash_type[2];
+		char hash_length[4];
+		char hash[64];
+		
+		char client_type[2];
+		char client_size[4];
+		char client_port[4];
+		char client_addresse[128];
+
+
+		sscanf(buf,"%3s%4s%2s%4s%64s%2s%4s%4s%128s",msg_type,msg_length,hash_type,hash_length,hash,client_type,client_size,client_port,client_addresse);
+
+		printf("msg_type : %d \n",atoi(msg_type));
+		printf("msg_length : %d \n",atoi(msg_length));
+		printf("client_addresse : %s \n",client_addresse);
+		 
+		
+
+		
 
         }
 
