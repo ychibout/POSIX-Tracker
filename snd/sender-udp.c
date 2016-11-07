@@ -65,8 +65,8 @@ int main(int argc, char **argv)
     if(inet_pton(AF_INET6, argv[1], &dest.sin6_addr) != 1)
     {
         perror("inet fail  \n");
-	close(sockfd);
-	exit(EXIT_FAILURE);
+	       close(sockfd);
+           exit(EXIT_FAILURE);
     }
 
     // send string
