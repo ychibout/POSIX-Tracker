@@ -46,7 +46,7 @@ int main(int argc, char **argv)
     if((sockfd = socket(AF_INET6,SOCK_DGRAM,IPPROTO_UDP)) == -1)
     {
         perror("socket fail \n");
-	exit(EXIT_FAILURE);
+		exit(EXIT_FAILURE);
     }
 
     // init remote addr structure and other params
@@ -57,50 +57,50 @@ int main(int argc, char **argv)
     if(inet_pton(AF_INET6, argv[1], &dest.sin6_addr) != 1)
     {
         perror("inet fail  \n");
-	close(sockfd);
-	exit(EXIT_FAILURE);
+		close(sockfd);
+		exit(EXIT_FAILURE);
     }
 
     if (strcmp(argv[4], "put") == 0)
     {
             int taille_hash = strlen(argv[5]);
-      			int taille_base = (1+9+18)*8;
-      			int taille_final = taille_hash + taille_base +128;
-                        int taille_final_moins_un = taille_final--;
+      		int taille_base = (1+9+18)*8;
+      		int taille_final = taille_hash + taille_base +128;
+            int taille_final_moins_un = taille_final--;
 			printf("taille hash : %d \n", taille_hash);
 			printf("taille finale : %d \n", taille_final);
 
-      			char *buf;
-                        buf = (char*)malloc(taille_final*sizeof(char));
+      		char *buf;
+            buf = (char*)malloc(taille_final*sizeof(char));
 
-    			struct sockaddr_in6 src;
-                        char *str =(char*)malloc(128*sizeof(char));
-                        strcpy(str, "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001");
-      			if(inet_pton(AF_INET6, "0000:0000:0000:0000:0000:0000:0000:0001", &src.sin6_addr) != 1)
-      			{
-        				perror("inet fail  \n");
-								close(sockfd);
-								exit(EXIT_FAILURE);
-    			}
+			struct sockaddr_in6 src;
+            char *str =(char*)malloc(128*sizeof(char));
+            strcpy(str, "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001");
+			
+			if(inet_pton(AF_INET6, "0000:0000:0000:0000:0000:0000:0000:0001", &src.sin6_addr) != 1)
+      		{
+        		perror("inet fail  \n");
+				close(sockfd);
+				exit(EXIT_FAILURE);
+    		}
 
-                        //inet_ntop(AF_INET6, &(src.sin6_addr), str, INET6_ADDRSTRLEN);
+            //inet_ntop(AF_INET6, &(src.sin6_addr), str, INET6_ADDRSTRLEN);
 
-      			printf("hash : %s \n",argv[5]);
+      		printf("hash : %s \n",argv[5]);
             printf("port : %s \n",argv[2]);
             printf("ipv6: %s \n",str);
-	           snprintf(buf, taille_final, "110%d5064%s5518%s%s", taille_final_moins_un, argv[5], argv[2],str);
+	        snprintf(buf, taille_final, "110%d5064%s5518%s%s", taille_final_moins_un, argv[5], argv[2],str);
 
-      			printf("%s \n",buf);
+			printf("%s \n",buf);
 
-                        if (sendto(sockfd, buf, strlen(buf), 0, (struct sockaddr *) &dest, addrlen) == -1)
-                        {
-                                perror("send to fail \n");
-                                close(sockfd);
-                                exit(EXIT_FAILURE);
-                        }
+            if (sendto(sockfd, buf, strlen(buf), 0, (struct sockaddr *) &dest, addrlen) == -1)
+            {
+				perror("send to fail \n");
+                close(sockfd);
+                exit(EXIT_FAILURE);
+            }
 
             // 110  taille_final-1 50 64 b8799e375b7cce6d5c6e2651bcce0eb0458f663457287ddf0f4cd93e8327c3fb] [55 18 argv[2] inet_pton(AF_INET6, ::1, buf)]
-
     }
 
 
