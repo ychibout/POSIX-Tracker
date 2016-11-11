@@ -18,7 +18,7 @@ int main(int argc, char **argv)
 
         if (argc != 3)
         {
-                fprintf(stderr, "Usage : %s <domainname> <port>\n", argv[0]);
+                fprintf(stderr, "Usage : %s localhost rcvport\n", argv[0]);
                 return 1;
         }
 
@@ -166,7 +166,7 @@ int main(int argc, char **argv)
 
       			//printf("%s \n",buf); <- affichage du message qu'on envoie
 
-                        if (sendto(sockfd2, buf2, strlen(buf2), 0, (struct sockaddr *) &dest, addrlen) == -1)
+                        if (sendto(sockfd2, buf2, strlen(buf2), 0, (struct sockaddr *) &dest, addrlen2) == -1)
                         {
                                 perror("send to fail \n");
                                 close(sockfd);

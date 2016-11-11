@@ -38,6 +38,13 @@
 
 int main(int argc, char **argv)
 {
+  
+    if(argc != 6)
+    {
+        printf("Usage: %s localhost sndport rcvport put/get hash \n", argv[0]);
+        exit(-1);
+    }
+    
     int sockfd;
     socklen_t addrlen;
     struct sockaddr_in6 dest;
