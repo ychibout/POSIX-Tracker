@@ -121,7 +121,7 @@ int main(int argc, char **argv)
    memcpy(&pclient_port, buf+sizeof(msg_type)+sizeof(msg_len)+sizeof(hash_type)+sizeof(hash_len)+sizeof(hash)+sizeof(client_type)+sizeof(client_len), sizeof(pclient_port));
    memcpy(&pclient_addr, buf+sizeof(msg_type)+sizeof(msg_len)+sizeof(hash_type)+sizeof(hash_len)+sizeof(hash)+sizeof(client_type)+sizeof(client_len)+sizeof(pclient_port), sizeof(pclient_addr));
 
-   printf("\n\nMessage à envoyer : \n");
+   /*printf("\n\nMessage à envoyer : \n");
    printf("msg_type : %u\n", pmsg_type);
    printf("msg_len : %d\n", pmsg_len);
    printf("hash_type : %u\n", phash_type);
@@ -130,7 +130,8 @@ int main(int argc, char **argv)
    printf("client_type : %u\n", pclient_type);
    printf("client_len : %d\n", pclient_len);
    printf("client_port : %d\n", pclient_port);
-   printf("client : %s\n", inet_ntop(AF_INET6, &pclient_addr, client, sizeof(pclient_addr)));
+   printf("client : %s\n", inet_ntop(AF_INET6, &pclient_addr, client, sizeof(pclient_addr)));*/
+   
 
 
    //Envoi du message
@@ -141,7 +142,13 @@ int main(int argc, char **argv)
       close(sockfd);
       exit(EXIT_FAILURE);
    }
+   
+   printf("listening on %d\n", atoi(argv[3]));
+    if (!strcmp(argv[4],"put") )
+      printf("put %s to %s port %d \n",phash,inet_ntop(AF_INET6, &pclient_addr, client, sizeof(pclient_addr)),atoi(argv[2]));
 
+    if (!strcmp(argv[4],"get") )
+      printf("get %s to %s port %d \n",phash,inet_ntop(AF_INET6, &pclient_addr, client, sizeof(pclient_addr)),atoi(argv[2]));
 
    int sockfd2; // descripteur
    socklen_t addrlen2; // socket
@@ -161,7 +168,7 @@ int main(int argc, char **argv)
    my_addr.sin6_addr        = in6addr_any; // on ecoute sur n'importe quel adresse ( anycast )
    addrlen2                  = sizeof(struct sockaddr_in6); // longueur de l'adresse
 
-   printf("\nlistening on %d\n", atoi(argv[3]));
+   
 
    // association de la socket avec l'adresse
    if( bind(sockfd2, (struct sockaddr *) &my_addr, addrlen2) == -1) // adresse
@@ -204,7 +211,7 @@ int main(int argc, char **argv)
       memcpy(&rclient_port, ack+sizeof(msg_type)+sizeof(msg_len)+sizeof(hash_type)+sizeof(hash_len)+sizeof(hash)+sizeof(client_type)+sizeof(client_len), sizeof(pclient_port));
       memcpy(&rclient_addr, ack+sizeof(msg_type)+sizeof(msg_len)+sizeof(hash_type)+sizeof(hash_len)+sizeof(hash)+sizeof(client_type)+sizeof(client_len)+sizeof(pclient_port), sizeof(pclient_addr));
 
-      printf("\n\nRéponse tracker :\n");
+      /*printf("\n\nRéponse tracker :\n");
       printf("msg_type : %u\n", rmsg_type);
       printf("msg_len : %d\n", rmsg_len);
       printf("hash_type : %u\n", rhash_type);
@@ -213,7 +220,11 @@ int main(int argc, char **argv)
       printf("client_type : %u\n", rclient_type);
       printf("client_len : %d\n", rclient_len);
       printf("client_port : %d\n", rclient_port);
-      printf("client : %s\n", inet_ntop(AF_INET6, &rclient_addr, client, sizeof(rclient_addr)));
+      printf("client : %s\n", inet_ntop(AF_INET6, &rclient_addr, client, sizeof(rclient_addr)));*/
+      
+      if (!strcmp(argv[4],"get") )
+      {
+        printf("IP : %s port %d \n",inet_ntop(AF_INET6, &rclient_addr, client, sizeof(rclient_addr)),rclient_port);
       
       int s = 21;
       while ( rmsg_len > 89 )
@@ -224,10 +235,15 @@ int main(int argc, char **argv)
         memcpy(&rclient_addr, s+ack+sizeof(msg_type)+sizeof(msg_len)+sizeof(hash_type)+sizeof(hash_len)+sizeof(hash)+sizeof(client_type)+sizeof(client_len)+sizeof(pclient_port), sizeof(pclient_addr));
         s+=21;
         rmsg_len-=21;
-        printf("\nclient_type : %u\n", rclient_type);
+        /*printf("\nclient_type : %u\n", rclient_type);
         printf("client_len : %d\n", rclient_len);
         printf("client_port : %d\n", rclient_port);
-        printf("client : %s\n", inet_ntop(AF_INET6, &rclient_addr, client, sizeof(rclient_addr)));
+        printf("client : %s\n", inet_ntop(AF_INET6, &rclient_addr, client, sizeof(rclient_addr)));*/
+        
+        printf("IP : %s port %d \n",inet_ntop(AF_INET6, &rclient_addr, client, sizeof(rclient_addr)),rclient_port);
+        
+
+      }
       }
  
 

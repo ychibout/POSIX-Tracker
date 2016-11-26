@@ -193,8 +193,9 @@ int main(int argc, char **argv)
                     close(sockfd);
                     exit(EXIT_FAILURE);
                }
+               printf("ACK PUT envoyé \n");
           }
-		  printf("ACK GET !! \n");
+		  
 
           if (msg_type == 112)
           {
@@ -215,7 +216,7 @@ int main(int argc, char **argv)
                void *rep = malloc(71);
                msg_type = 113;
                memcpy(rep, &msg_type, sizeof(msg_type)); //type message
-               /*msg_len */ memcpy(rep+sizeof(msg_type), &msg_len, sizeof(msg_len)); //taille message
+               memcpy(rep+sizeof(msg_type), &msg_len, sizeof(msg_len)); //taille message
                memcpy(rep+sizeof(msg_type)+sizeof(msg_len), &hash_type, sizeof(hash_type)); // type hash
                memcpy(rep+sizeof(msg_type)+sizeof(msg_len)+sizeof(hash_type), &hash_len, sizeof(hash_len)); // taille hash
                memcpy(rep+sizeof(msg_type)+sizeof(msg_len)+sizeof(hash_type)+sizeof(hash_len), hash, sizeof(hash)); // hash
@@ -233,18 +234,33 @@ int main(int argc, char **argv)
                          memcpy(rep+71+(nbclients-1)*21+sizeof(client_type)+sizeof(client_len), &tab[i].port, sizeof(client_port));
                          memcpy(rep+71+(nbclients-1)*21+sizeof(client_type)+sizeof(client_len)+sizeof(client_port), &tab[i].client, sizeof(client_addr));
 
-						memcpy(&rclient_type, rep+71+(nbclients-1)*21, sizeof(rclient_type));   
+                  memcpy(&rclient_type, rep+71+(nbclients-1)*21, sizeof(rclient_type));   
        				    memcpy(&rclient_len,  rep+71+(nbclients-1)*21+sizeof(client_type), sizeof(rclient_len));   
-        				memcpy(&rclient_port, rep+71+(nbclients-1)*21+sizeof(client_type)+sizeof(client_len), sizeof(rclient_port));
-        				memcpy(&rclient_addr, rep+71+(nbclients-1)*21+sizeof(client_type)+sizeof(client_len)+sizeof(client_port), sizeof(rclient_addr));
+                  memcpy(&rclient_port, rep+71+(nbclients-1)*21+sizeof(client_type)+sizeof(client_len), sizeof(rclient_port));
+                  memcpy(&rclient_addr, rep+71+(nbclients-1)*21+sizeof(client_type)+sizeof(client_len)+sizeof(client_port), sizeof(rclient_addr));
 
-			    printf("client_type : %u\n", rclient_type);
-      			printf("client_len : %d\n", rclient_len);
-      			printf("client_port : %d\n", rclient_port);
-      			printf("client : %s\n", inet_ntop(AF_INET6, &rclient_addr, rclient, sizeof(rclient_addr)));
+                /*printf("client_type : %u\n", rclient_type);
+                  printf("client_len : %d\n", rclient_len);
+                  printf("client_port : %d\n", rclient_port);
+                  printf("client : %s\n", inet_ntop(AF_INET6, &rclient_addr, rclient, sizeof(rclient_addr)));*/
                     }
                     
+                    
                }
+               
+               if ( nbclients != 0)
+                    {
+                      nbelem++;
+                    tab = (struct elem*)realloc(tab, nbelem*sizeof(struct elem));
+                    strcpy(tab[nbelem-1].hash, hash);
+                    tab[nbelem-1].client = client_addr;
+                    tab[nbelem-1].port = client_port;
+                    printf("\n\nNouvelle entrée : \n");
+                    printf("Hash : %s\n", tab[nbelem-1].hash);
+                    printf("Adresse client : %s\n", inet_ntop(AF_INET6, &tab[nbelem-1].client, client_tst, sizeof(tab[nbelem-1].client)));
+                    printf("Port : %d\n", tab[nbelem-1].port);
+                    printf("nb éléments dans le tracker : %d\n\n", nbelem);
+                    }
               // printf("Nb clients : %d \n",nbclients);
                msg_len2+=21*nbclients;
               // printf("msg_len %u \n",msg_len2);
@@ -267,6 +283,7 @@ int main(int argc, char **argv)
                     close(sockfd);
                     exit(EXIT_FAILURE);
                }
+               printf("ACK GET envoyé \n");
           }
      }
 
