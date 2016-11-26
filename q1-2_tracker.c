@@ -7,7 +7,8 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 
-typedef struct elem {
+struct elem 
+{
      char hash[65];
      struct in6_addr client;
      short int port;
@@ -193,9 +194,22 @@ int main(int argc, char **argv)
                     exit(EXIT_FAILURE);
                }
           }
+		  printf("ACK GET !! \n");
 
           if (msg_type == 112)
           {
+			   char rmsg_type;
+      			short int rmsg_len;
+      			char rhash_type;
+      			short int rhash_len;
+      			char* rhash[65];
+      			char rclient_type;
+      			short int rclient_len;
+      			short int rclient_port;
+      			char* rclient = (char*)malloc(50);
+      			struct in6_addr rclient_addr;
+
+
                short int msg_len2 = 68;
                int nbclients = 0;
                void *rep = malloc(71);
@@ -205,6 +219,7 @@ int main(int argc, char **argv)
                memcpy(rep+sizeof(msg_type)+sizeof(msg_len), &hash_type, sizeof(hash_type)); // type hash
                memcpy(rep+sizeof(msg_type)+sizeof(msg_len)+sizeof(hash_type), &hash_len, sizeof(hash_len)); // taille hash
                memcpy(rep+sizeof(msg_type)+sizeof(msg_len)+sizeof(hash_type)+sizeof(hash_len), hash, sizeof(hash)); // hash
+
                
                int i;
                for (i = 0; i < nbelem; i++)
@@ -217,6 +232,16 @@ int main(int argc, char **argv)
                          memcpy(rep+71+(nbclients-1)*21+sizeof(client_type), &client_len, sizeof(client_len));
                          memcpy(rep+71+(nbclients-1)*21+sizeof(client_type)+sizeof(client_len), &tab[i].port, sizeof(client_port));
                          memcpy(rep+71+(nbclients-1)*21+sizeof(client_type)+sizeof(client_len)+sizeof(client_port), &tab[i].client, sizeof(client_addr));
+
+						memcpy(&rclient_type, rep+71+(nbclients-1)*21, sizeof(rclient_type));   
+       				    memcpy(&rclient_len,  rep+71+(nbclients-1)*21+sizeof(client_type), sizeof(rclient_len));   
+        				memcpy(&rclient_port, rep+71+(nbclients-1)*21+sizeof(client_type)+sizeof(client_len), sizeof(rclient_port));
+        				memcpy(&rclient_addr, rep+71+(nbclients-1)*21+sizeof(client_type)+sizeof(client_len)+sizeof(client_port), sizeof(rclient_addr));
+
+			    printf("client_type : %u\n", rclient_type);
+      			printf("client_len : %d\n", rclient_len);
+      			printf("client_port : %d\n", rclient_port);
+      			printf("client : %s\n", inet_ntop(AF_INET6, &rclient_addr, rclient, sizeof(rclient_addr)));
                     }
                     
                }

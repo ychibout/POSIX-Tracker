@@ -176,7 +176,7 @@ int main(int argc, char **argv)
       void* ack = malloc(total_len+1000);
 
       // reception de la chaine de caracteres
-      if(recvfrom(sockfd2, ack , total_len, 0, (struct sockaddr *) &my_addr, &addrlen2 ) == -1)
+      if(recvfrom(sockfd2, ack , total_len+1000, 0, (struct sockaddr *) &my_addr, &addrlen2 ) == -1)
       {
          perror("recvfrom fail \n");
          close(sockfd2);
