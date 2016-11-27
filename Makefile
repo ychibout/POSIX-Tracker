@@ -12,7 +12,7 @@ q1-2_client.o: q1-2_client.c
 	$(CC) -o q1-2_client.o -c q1-2_client.c -W -Wall 
 
 tracker: q1-2_tracker.o 
-	$(CC) -o tracker q1-2_tracker.o 
+	$(CC) -pthread -o tracker q1-2_tracker.o 
 
 q1-2_tracker.o: q1-2_tracker.c
 	$(CC) -o q1-2_tracker.o -c q1-2_tracker.c -W -Wall 
